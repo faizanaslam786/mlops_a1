@@ -22,12 +22,14 @@ def classify_iris():
             petal_width = float(request.form['petal_width'])
 
             # Make a prediction using the loaded model
-            input_data = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+            input_data = np.array([
+                [sepal_length, sepal_width, petal_length, petal_width]
+            ])
             prediction = model.predict(input_data)[0]
 
             # Map the numeric prediction to Iris species
             iris_species = ['Setosa', 'Versicolor', 'Virginica']
-            result = f'The predicted Iris species is {iris_species[prediction]}'
+            result = f'predicted Iris species is {iris_species[prediction]}'
         except ValueError:
             result = 'Invalid input. Please enter valid numeric values.'
 
@@ -36,3 +38,4 @@ def classify_iris():
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8080)
+    
