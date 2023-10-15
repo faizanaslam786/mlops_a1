@@ -1,5 +1,3 @@
-
-
 class Bulb:
     status = False
 
