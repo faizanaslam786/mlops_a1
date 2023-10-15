@@ -22,9 +22,7 @@ def classify_iris():
             petal_width = float(request.form['petal_width'])
 
             # Make a prediction using the loaded model
-            input_data = np.array([
-                [sepal_length, sepal_width, petal_length, petal_width]
-            ])
+            input_data = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
             prediction = model.predict(input_data)[0]
 
             # Map the numeric prediction to Iris species
