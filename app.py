@@ -8,10 +8,11 @@ app = Flask(__name__)
 with open('iris_classifier.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
+
 @app.route('/', methods=['GET', 'POST'])
 def classify_iris():
     result = ''
-    
+
     if request.method == 'POST':
         try:
             # Get user input from the form
@@ -32,7 +33,6 @@ def classify_iris():
 
     return render_template('index.html', result=result)
 
+
 if __name__ == '__main__':
-    # print("RAN") 
-    app.run(debug=True,host="0.0.0.0",port=8080)
-    
+    app.run(debug=True, host="0.0.0.0", port=8080)
