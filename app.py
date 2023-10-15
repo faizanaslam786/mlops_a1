@@ -33,5 +33,6 @@ def classify_iris():
     return render_template('index.html', result=result)
 
 if __name__ == '__main__':
+    # print("RAN") 
     app.run(debug=True,host="0.0.0.0",port=8080)
     
