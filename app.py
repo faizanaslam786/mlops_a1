@@ -11,7 +11,8 @@ with open('iris_classifier.pkl', 'rb') as model_file:
 
 @app.route('/', methods=['GET', 'POST'])
 def classify_iris():
-    result = ''    
+    result = ''
+
     if request.method == 'POST':
         try:
             # Get user input from the form
@@ -28,12 +29,12 @@ def classify_iris():
 
             # Map the numeric prediction to Iris species
             iris_species = ['Setosa', 'Versicolor', 'Virginica']
-            result = f'predicted Iris species is {iris_species[prediction]}'
+            result = f'Predicted Iris species is {iris_species[prediction]}'
         except ValueError:
             result = 'Invalid input. Please enter valid numeric values.'
 
     return render_template('index.html', result=result)
 
+
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0",port=8080)
-    
+    app.run(debug=True, host="0.0.0.0", port=8080)
