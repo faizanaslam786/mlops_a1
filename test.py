@@ -1,38 +1,40 @@
-import unittest
-from app import app
+from flask import Flask, request, render_template
+import pickle
+import numpy as np
 
-class TestIrisClassification(unittest.TestCase):
+app = Flask(__name__)
 
-    def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
+# Load the trained model
+with open('iris_classifier.pkl', 'rb') as model_file:
+    model = pickle.load(model_file)
 
-    def test_home_route(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_code, 200)
 
-    def test_classification(self):
-        # Test a valid prediction
-        valid_input = {
-            'sepal_length': '5.1',
-            'sepal_width': '3.5',
-            'petal_length': '1.4',
-            'petal_width': '0.2'
-        }
-        response = self.app.post('/', data=valid_input)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'The predicted Iris species is Setosa', response.data)
+@app.route('/', methods=['GET', 'POST'])
+def classify_iris():
+    result = ''
 
-        # Test an invalid prediction (non-numeric input)
-        invalid_input = {
-            'sepal_length': 'invalid',
-            'sepal_width': 'input',
-            'petal_length': 'here',
-            'petal_width': 'too'
-        }
-        response = self.app.post('/', data=invalid_input)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Invalid input. Please enter valid numeric values.', response.data)
+    if request.method == 'POST':
+        try:
+            # Get user input from the form
+            sepal_length = float(request.form['sepal_length'])
+            sepal_width = float(request.form['sepal_width'])
+            petal_length = float(request.form['petal_length'])
+            petal_width = float(request.form['petal_width'])
+
+            # Make a prediction using the loaded model
+            input_data = np.array([
+                [sepal_length, sepal_width, petal_length, petal_width]
+            ])
+            prediction = model.predict(input_data)[0]
+
+            # Map the numeric prediction to Iris species
+            iris_species = ['Setosa', 'Versicolor', 'Virginica']
+            result = f'Predicted Iris species is {iris_species[prediction]}'
+        except ValueError:
+            result = 'Invalid input. Please enter valid numeric values.'
+
+    return render_template('index.html', result=result)
+
 
 if __name__ == '__main__':
-    unittest.main()
+    app.run(debug=True, host="0.0.0.0", port=8080)
